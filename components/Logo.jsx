@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import "next-auth/react";
+import Image from "next/image";
 
 const Logo = () => {
   const { data: session } = useSession();
@@ -27,6 +28,13 @@ const Logo = () => {
       <nav className="">
         {session?.user ? (
           <div className="flex gap-3">
+            <Link href="/chat">
+              <Image
+                src="/assets/icons/Chat bubble.png"
+                width={31}
+                height={5}
+              />
+            </Link>
             <button
               className="black_btn"
               type="button"

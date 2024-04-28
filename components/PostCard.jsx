@@ -92,7 +92,7 @@ const PostCard = ({
   return (
     <div className="border border-black flex flex-col rounded-md shadow-lg bg-transparent">
       <div
-        className="flex gap-2 w-full p-2 items-center justify-start border-b border-black rounded-md shadow-md"
+        className="flex gap-2 w-full p-2 items-center justify-start border-b border-black rounded-md shadow-md cursor-pointer"
         onClick={handleToViewProfile}
       >
         <Image
@@ -113,7 +113,7 @@ const PostCard = ({
         />
         {readmore ? (
           <p
-            className="text-xs text-slate-500 cursor-pointer"
+            className="text-xs text-slate-500 cursor-pointer underline"
             onClick={handleToViewPost}
           >
             read more
@@ -124,7 +124,7 @@ const PostCard = ({
         <div className="text-xs">{post.tag}</div>
       </div>
 
-      <div className="border-t border-black">
+      <div className="">
         <div className="flex justify-between items-center">
           <div className="m-2 flex gap-5">
             <div className="flex gap-1 items-center">

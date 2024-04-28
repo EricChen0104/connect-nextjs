@@ -74,11 +74,11 @@
 /* Tailwind Styles */
 
 .app {
-  @apply bg-white w-[calc(100%-20px)] absolute top-2.5 left-2.5 h-[calc(100%-20px)] rounded-xl md:w-[calc(100%-107px)] md:left-24 bg-slate-100 shadow-2xl z-10;
+  @apply bg-neutral-300 w-[calc(100%-20px)] absolute top-2.5 left-2.5 h-[calc(100%-20px)] rounded-xl md:w-[calc(100%-107px)] md:left-24 bg-slate-100 shadow-2xl z-10;
 }
 
 .innerApp {
-  @apply absolute w-[calc(100%-20px)] md:w-100 md:-translate-x-1/2 md:left-1/2 left-2.5 top-20 h-[calc(100%-8rem)] overflow-auto;
+  @apply absolute w-[calc(100%-20px)] md:w-100 md:-translate-x-1/2 md:left-1/2 left-2.5 top-20 h-[calc(100%-9rem)] md:h-[calc(100%-7rem)] overflow-auto;
 }
 
 .textarea_post {

@@ -40,11 +40,12 @@ const otherProfile = () => {
   const handleBack = () => {
     router.back();
   };
+
   return (
     <div className="app">
       <motion.div
         onClick={handleBack}
-        className="cursor-pointer absolute top-20 left-2"
+        className="cursor-pointer absolute top-20 left-2 md:left-8"
         whileTap={{ x: 10 }}
         transition={{
           duration: 0.25,

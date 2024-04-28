@@ -13,7 +13,7 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }) => {
     router.back();
   };
   return (
-    <section className="bg-white absolute w-[calc(100%-20px)] md:w-100 md:-translate-x-1/2 md:left-1/2 bottom-2.5 h-[calc(100%-90px)] left-2.5 shadow-2xl rounded-xl">
+    <section className="bg-white absolute w-[calc(100%-20px)] md:w-100 md:-translate-x-1/2 md:left-1/2 bottom-10 h-[calc(100%-100px)] left-2.5 shadow-2xl rounded-xl overflow-auto">
       <h1 className="text-xl font-bold p-4">
         <span className="blue_gradient">{type} Post</span>
       </h1>
