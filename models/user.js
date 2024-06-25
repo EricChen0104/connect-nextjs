@@ -37,6 +37,10 @@ const UserSchema = new Schema({
     type: Number,
     default: 0,
   },
+  chats: {
+    type: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
+    default: [],
+  },
 });
 
 const User = models.User || model("User", UserSchema);

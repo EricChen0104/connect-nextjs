@@ -9,6 +9,8 @@ import { motion } from "framer-motion";
 import Profile from "@components/Profile";
 import Image from "next/image";
 
+import LoadingProfile from "@components/LoadingProfile";
+
 const otherProfile = () => {
   const searchParams = useSearchParams();
   const userId = searchParams.get("id");
@@ -53,7 +55,7 @@ const otherProfile = () => {
       >
         <Image src="/assets/icons/Back icon.png" width={20} height={20} />
       </motion.div>
-      {isLoading && <div>Loading...</div>}
+      {isLoading && <LoadingProfile />}
       {!isLoading && (
         <Profile
           id={user._id}

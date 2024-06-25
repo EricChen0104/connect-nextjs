@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import TextareaAutosize from "react-textarea-autosize";
 import { motion } from "framer-motion";
+import { CldUploadButton } from "next-cloudinary";
 
 const Form = ({ type, post, setPost, submitting, handleSubmit }) => {
   const router = useRouter();
@@ -12,14 +13,22 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }) => {
   const handleBack = () => {
     router.back();
   };
+
+  // const uploadPhoto = (result) => {
+
+  // }
+
   return (
     <section className="bg-white absolute w-[calc(100%-20px)] md:w-100 md:-translate-x-1/2 md:left-1/2 bottom-10 h-[calc(100%-100px)] left-2.5 shadow-2xl rounded-xl overflow-auto">
       <h1 className="text-xl font-bold p-4">
         <span className="blue_gradient">{type} Post</span>
       </h1>
 
-      <form className="flex flex-col w-full gap-4" onSubmit={handleSubmit}>
-        <div className="flex justify-between items-center w-[calc(100%-40px)] ml-4 mb-3">
+      <form
+        className="flex flex-col w-[calc(100%-2rem)] gap-4 ml-3 "
+        onSubmit={handleSubmit}
+      >
+        <div className="flex justify-between items-center w-full mb-3">
           <motion.div
             onClick={handleBack}
             className="cursor-pointer"
@@ -38,8 +47,8 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }) => {
             {submitting ? `${type}...` : type}
           </button>
         </div>
-        <label className="flex flex-col gap-4 px-2 border-t border-b">
-          <span className="font-semibold pt-4 pl-2">Your post</span>
+        <label className="flex flex-col gap-4 border-t border-b w-full">
+          <span className="font-semibold pt-4 w-full">Your post</span>
           <TextareaAutosize
             value={post.description}
             onChange={(e) => setPost({ ...post, description: e.target.value })}
@@ -47,8 +56,15 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }) => {
             className="textarea mb-4 p-2 focus:outline-none resize-none"
           />
         </label>
-        <label className="flex flex-col gap-4 px-2  border-b">
-          <span className="font-semibold pt-4 pl-2">
+        {/* <CldUploadButton
+          options={{ maxFiles: 5 }}
+          onUpload={() => {}}
+          uploadPreset="jptzo811"
+        >
+          <p>Upload new photo</p>
+        </CldUploadButton> */}
+        <label className="flex flex-col gap-4 px-2 border-b">
+          <span className="font-semibold pt-4">
             Tags {` `}
             <span className="font-light">(#lifestyle, #sports, #foods)</span>
           </span>

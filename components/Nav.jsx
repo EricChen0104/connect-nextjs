@@ -36,7 +36,7 @@ const Nav = () => {
           <Image src="/assets/icons/Home-button.png" layout="fill" />
         </motion.div>
       </button>
-      <Link href="/" className="">
+      <Link href="/searchUser" className="">
         <motion.div
           className="relative w-7 h-7"
           whileTap={{ scale: 1.5, rotate: "15deg" }}

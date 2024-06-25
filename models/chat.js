@@ -1,11 +1,15 @@
 import { Schema, model, models } from "mongoose";
 
+const moment = require("moment-timezone");
+const dateThailand = moment.tz(Date.now(), "Asia/Taipei");
+
 const ChatSchema = new Schema({
-  member: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
+  members: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   messages: {
     type: [{ type: Schema.Types.ObjectId, ref: "Message" }],
     default: [],
@@ -18,16 +22,20 @@ const ChatSchema = new Schema({
     type: String,
     default: "",
   },
+  groupPhoto: {
+    type: String,
+    default: "",
+  },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: dateThailand,
   },
   lastMessageAt: {
     type: Date,
-    default: Date.now,
+    default: dateThailand,
   },
 });
 
-const Chat = models.Chat || mongoose.model("Chat", ChatSchema);
+const Chat = models.Chat || model("Chat", ChatSchema);
 
 export default Chat;

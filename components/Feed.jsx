@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 
 import PostCard from "./PostCard";
 
+import LoadingPostBox from "./LoadingPostBox";
+
 const PostCardList = ({ data, handleTagClick }) => {
   return (
     <div className="flex flex-col gap-5">
@@ -24,6 +26,7 @@ const PostCardList = ({ data, handleTagClick }) => {
 
 const Feed = () => {
   const [post, setPost] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -31,6 +34,7 @@ const Feed = () => {
       const data = await response.json();
 
       setPost(data);
+      setLoading(false);
     };
 
     fetchPosts();
@@ -38,7 +42,20 @@ const Feed = () => {
 
   return (
     <section className="innerApp">
-      <PostCardList data={post} handleTagClick={() => {}} />
+      {loading ? (
+        <div className="flex flex-col gap-4">
+          <LoadingPostBox />
+          <LoadingPostBox />
+          <LoadingPostBox />
+          <LoadingPostBox />
+          <LoadingPostBox />
+          <LoadingPostBox />
+          <LoadingPostBox />
+          <LoadingPostBox />
+        </div>
+      ) : (
+        <PostCardList data={post} handleTagClick={() => {}} />
+      )}
     </section>
   );
 };

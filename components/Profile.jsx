@@ -6,12 +6,9 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 
-import TextareaAutosize from "react-textarea-autosize";
-
 const Profile = ({ id, name, image, desc, data, handleEdit, handleDelete }) => {
   const { data: session } = useSession();
   const router = useRouter();
-  if (!session) router.push("/");
   const handleToEdit = () => {
     router.push(`/edit-profile?id=${session?.user.id}`);
   };
@@ -36,7 +33,7 @@ const Profile = ({ id, name, image, desc, data, handleEdit, handleDelete }) => {
   const [btnText, setBtnText] = useState("Follow");
   let isFollow = false;
   // const [follow, setFollow] = useState(isFollow);
-  const [follow, setFollow] = useState(true);
+  const [follow, setFollow] = useState(false);
 
   const checkUser = async () => {
     try {
@@ -62,43 +59,51 @@ const Profile = ({ id, name, image, desc, data, handleEdit, handleDelete }) => {
   }, []);
 
   const handleFollow = async () => {
-    try {
-      const response = await fetch(
-        `/api/users/follow/${session?.user.id}/${id}`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            userId: session?.user.id,
-            followerId: id,
-          }),
+    if (session?.user) {
+      try {
+        const response = await fetch(
+          `/api/users/follow/${session?.user.id}/${id}`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              userId: session?.user.id,
+              followerId: id,
+            }),
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          if (data.msg === "User cancel followed successfully.") {
+            setFollow(false);
+          } else setFollow(true);
         }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        if (data.msg === "User cancel followed successfully.") {
-          setFollow(false);
-        } else setFollow(true);
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
   const handleMessage = async () => {
-    try {
-      const response = await fetch(`/api/chat/new`, {
-        method: "POST",
-        body: JSON.stringify({
-          member: id,
-        }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
+    if (session?.user) {
+      try {
+        const response = await fetch(`/api/chat/new`, {
+          method: "POST",
+          body: JSON.stringify({
+            member: id,
+            name: name,
+            userId: session?.user.id,
+            image,
+          }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          router.push(`/chat/chatDetail?id=${data?._id}`);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -108,17 +113,23 @@ const Profile = ({ id, name, image, desc, data, handleEdit, handleDelete }) => {
         <Image src={image} width={45} height={45} className="rounded-full" />
         <p className="text-lg font-medium">{name}</p>
       </div>
-      <TextareaAutosize
+      {/* <pre
         value={desc}
-        className="textarea_post"
+        
         // maxRows={default}
+        
+      > */}
+      <pre
         ref={textAreaRef}
-      />
+        className={`text-sm ${bioLen ? "max-h-20 overflow-hidden" : ""} `}
+      >
+        {desc}
+      </pre>
       {readmore && (
         <div
           className="text-xs text-slate-500 cursor-pointer"
           onClick={() => {
-            setBioLen(false);
+            setBioLen(!bioLen);
           }}
         >
           ...readmore
@@ -152,7 +163,10 @@ const Profile = ({ id, name, image, desc, data, handleEdit, handleDelete }) => {
             )}
           </div>
         )}
-        <button className="px-5 py-2 bg-slate-800 text-white border-0 rounded-md text-xs">
+        <button
+          onClick={handleMessage}
+          className="px-5 py-2 bg-slate-800 text-white border-0 rounded-md text-xs"
+        >
           Send message
         </button>
       </div>

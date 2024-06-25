@@ -32,6 +32,7 @@ module.exports = {
       },
       width: {
         100: "40rem",
+        200: "70rem",
       },
     },
   },
