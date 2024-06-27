@@ -20,7 +20,7 @@ const Chat = () => {
         <div className="relative h-5 w-5 cursor-pointer" onClick={handleBack}>
           <Image src="/assets/icons/Back icon.png" fill />
         </div>
-        <h3>Contact</h3>
+        <h3 className="text-lg font-bold py-2">Contact</h3>
         <ChatList />
       </div>
     </section>

@@ -35,11 +35,7 @@ const MessageBox = ({
             </div>
           )}
           <div
-            className={`bg-transparent hover:bg-slate-100 border-slate-500 border cursor-pointer px-3 py-1 ${
-              hideAvatar
-                ? "rounded-tl-md rounded-bl-md rounded-tr-2xl rounded-br-2xl"
-                : "rounded-2xl"
-            } max-w-56 w-fit`}
+            className={`bg-transparent hover:bg-slate-100 border-slate-500 border cursor-pointer px-3 py-1 max-w-56 w-fit rounded-xl`}
           >
             <pre className="text-black text-sm bg-transparent whitespace-pre-wrap break-words">
               {message?.text}
@@ -78,13 +74,9 @@ const MessageBox = ({
             {format(new Date(message?.createdAt), "p")}
           </p>
           <div
-            className={`bg-slate-400 hover:bg-slate-500 cursor-pointer px-3 py-1.5 ${
-              hideAvatar
-                ? "rounded-tl-2xl rounded-bl-2xl rounded-tr-md rounded-br-md"
-                : "rounded-2xl"
-            } max-w-56 w-fit`}
+            className={`bg-slate-100 hover:bg-slate-200 cursor-pointer px-3 py-1 border border-black rounded-xl max-w-56 w-fit`}
           >
-            <pre className="text-white text-sm bg-transparent whitespace-pre-wrap break-words">
+            <pre className="text-black text-sm bg-transparent whitespace-pre-wrap break-words">
               {message?.text}
             </pre>
           </div>

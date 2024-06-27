@@ -118,9 +118,9 @@ const ChatDetail = () => {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
-      behavior: "smooth",
+      behavior: "instant",
     });
-  }, [chat?.messages]);
+  }, [chat?.messages, replyText]);
 
   const renderMessages = (messages, setReplyTextId, setReplyText) => {
     let prevSender = null;
@@ -138,7 +138,9 @@ const ChatDetail = () => {
       console.log(minutesDifference);
       prevSender = message.sender._id;
       prevSenderTime = new Date(message.createdAt);
-      if (hideAvatar && minutesDifference > 2) hideAvatar = false;
+      if (hideAvatar && minutesDifference > 2) {
+        hideAvatar = false;
+      }
 
       return (
         <MessageBox
@@ -197,13 +199,17 @@ const ChatDetail = () => {
               <div>Loading...</div>
             ) : (
               <div className="h-full">
-                <div className="w-full border flex items-center gap-2 py-1 px-3 rounded-t-md">
-                  <div className="relative w-10 h-10">
+                <div className="w-full border flex items-center gap-2 py-2 px-3 rounded-t-md">
+                  <div className="relative w-8 h-8">
                     <Image src={groupPhoto} fill className="rounded-full" />
                   </div>
                   <p className="text-sm">{groupName}</p>
                 </div>
-                <div className="px-3 h-[calc(100%-7rem)] w-full bg-transparent overflow-auto flex flex-col items-center gap-10">
+                <div
+                  className={`px-3 ${
+                    replyText ? "h-[calc(100%-9.2rem)]" : "h-[calc(100%-7rem)]"
+                  } w-full bg-transparent overflow-auto flex flex-col items-center gap-10`}
+                >
                   <div className="flex flex-col items-center mt-10 gap-2">
                     <div className="relative h-20 w-20">
                       <Image src={groupPhoto} fill className="rounded-full" />

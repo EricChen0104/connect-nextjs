@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 
 import ChatBox from "./ChatBox";
+import LoadingChatBox from "./LoadingChatBox";
 
 import { useRouter } from "next/navigation";
 import { pusherClient } from "@lib/pusher";
@@ -59,18 +60,23 @@ const ChatList = () => {
 
   useEffect(() => {
     if (currentUser) {
+      console.log("fuck you. you son of a bitch");
       pusherClient.subscribe(currentUser.id);
 
       const handleChatUpdate = (updatedChat) => {
-        setChats((allChats) =>
-          allChats.map((chat) => {
-            if (chat._id === updatedChat.id) {
-              return { ...chat, messages: updatedChat.messages };
-            } else {
-              return chat;
-            }
-          })
-        );
+        setLoading(true);
+        getChats();
+        if (!setLoading) {
+          setChats((allChats) =>
+            allChats.map((chat) => {
+              if (chat._id === updatedChat.id) {
+                return { ...chat, messages: updatedChat.messages };
+              } else {
+                return chat;
+              }
+            })
+          );
+        }
       };
 
       const handleNewChat = (newChat) => {
@@ -98,13 +104,19 @@ const ChatList = () => {
       />
 
       {loading ? (
-        <div>Loading</div>
+        <div className="flex flex-col">
+          {chats?.map((_, index) => (
+            <LoadingChatBox key={index} />
+          ))}
+        </div>
       ) : (
+        // <LoadingChatBox />
         <div>
           {chats?.map((chat, index) => (
             <div
               onClick={() => {
                 router.push(`/chat/chatDetail?id=${chat._id}`);
+                getChats();
               }}
             >
               <ChatBox chat={chat} index={index} currentUser={currentUser} />

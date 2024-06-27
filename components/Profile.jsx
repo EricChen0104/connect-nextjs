@@ -163,12 +163,18 @@ const Profile = ({ id, name, image, desc, data, handleEdit, handleDelete }) => {
             )}
           </div>
         )}
-        <button
-          onClick={handleMessage}
-          className="px-5 py-2 bg-slate-800 text-white border-0 rounded-md text-xs"
-        >
-          Send message
-        </button>
+        {session?.user.id === id ? (
+          <button className="px-5 py-2 bg-slate-800 text-white border-0 rounded-md text-xs">
+            share your profile
+          </button>
+        ) : (
+          <button
+            onClick={handleMessage}
+            className="px-5 py-2 bg-slate-800 text-white border-0 rounded-md text-xs"
+          >
+            Send message
+          </button>
+        )}
       </div>
       <hr />
       <div className="flex flex-col gap-5 h-[calc(100%-17rem)] overflow-auto">
