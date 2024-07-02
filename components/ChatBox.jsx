@@ -45,7 +45,7 @@ const ChatBox = ({ chat, currentUser }) => {
               <p
                 className={`text-sm ${
                   seen ? "text-slate-500" : "font-semibold"
-                } max-w-20 w-fit h-5 text-ellipsis overflow-hidden`}
+                } max-w-20 w-fit truncate overflow-hidden whitespace-nowrap`}
               >
                 {lastMessage?.text}
               </p>

@@ -343,7 +343,7 @@ const ChatDetail = () => {
                       </p>
 
                       <div
-                        className="relative h-5 w-5 cursor-pointer"
+                        className="relative h-5 w-5 cursor-pointer pl-4"
                         onClick={handleCancelReply}
                       >
                         <Image src="/assets/icons/Cross icon.png" fill />
@@ -364,7 +364,7 @@ const ChatDetail = () => {
                       </p>
 
                       <div
-                        className="relative h-5 w-5 cursor-pointer"
+                        className="relative h-5 w-5 cursor-pointer pl-4"
                         onClick={handleCancelEdit}
                       >
                         <Image src="/assets/icons/Cross icon.png" fill />
