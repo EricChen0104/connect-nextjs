@@ -88,6 +88,15 @@
   width: 80%;
 }
 
+.context-text {
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
+  @apply rounded-md;
+}
+.context-text:hover {
+  @apply bg-slate-400 text-white pl-2 bg-clip-border;
+}
+
 @keyframes skeleton-loading {
   0% {
     background-color: hsl(200, 20%, 70%);
@@ -133,6 +142,10 @@
 
 .orange_gradient {
   @apply bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 bg-clip-text text-transparent;
+}
+
+.red_gradient {
+  @apply bg-gradient-to-r from-red-600 via-orange-500 bg-clip-text text-transparent;
 }
 
 .green_gradient {

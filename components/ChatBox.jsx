@@ -29,7 +29,7 @@ const ChatBox = ({ chat, currentUser }) => {
   }, []);
 
   return (
-    <div className="w-[calc(100%-1rem)] my-4 py-2 rounded-lg cursor-pointer shadow-md ml-2 hover:bg-slate-200">
+    <div className="w-[calc(100%-1rem)] my-4 py-2 rounded-lg cursor-pointer shadow-md ml-2 hover:bg-slate-200 transition-all">
       <div className="flex items-center px-2 gap-4">
         <div className="relative h-10 w-10">
           <Image src={groupPhoto} fill className="rounded-full" />

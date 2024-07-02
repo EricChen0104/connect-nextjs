@@ -33,6 +33,10 @@ const MessageSchema = new Schema({
     type: [{ type: Schema.Types.ObjectId, ref: "User" }],
     default: [],
   },
+  edited: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Message = models.Message || model("Message", MessageSchema);

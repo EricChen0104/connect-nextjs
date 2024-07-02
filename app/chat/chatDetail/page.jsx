@@ -12,6 +12,10 @@ import TextareaAutosize from "react-textarea-autosize";
 import MessageBox from "@components/MessageBox";
 import { pusherClient } from "@lib/pusher";
 
+import ContextBox from "@components/message-context/ContextBox";
+
+import { motion } from "framer-motion";
+
 const ChatDetail = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -25,6 +29,7 @@ const ChatDetail = () => {
   const [text, setText] = useState("");
 
   const [groupName, setGroupName] = useState("");
+  const [groupUserId, setGroupUserId] = useState("");
   const [groupPhoto, setGroupPhoto] = useState("");
 
   const seenMessages = async () => {
@@ -52,9 +57,11 @@ const ChatDetail = () => {
         if (data?.members[0]._id === session?.user.id) {
           setGroupName(data?.members[1].username);
           setGroupPhoto(data?.members[1].image);
+          setGroupUserId(data?.members[1]._id);
         } else {
           setGroupName(data?.members[0].username);
           setGroupPhoto(data?.members[0].image);
+          setGroupUserId(data?.members[0]._id);
         }
       }
     } catch (error) {
@@ -72,25 +79,43 @@ const ChatDetail = () => {
 
   const [replyTextId, setReplyTextId] = useState("");
   const [replyText, setReplyText] = useState("");
+  const [editText, setEditText] = useState("");
+
+  const [contextReply, setContextReply] = useState("");
 
   const sendText = async () => {
-    try {
+    if (editText !== "") {
       const response = await fetch("/api/messages", {
-        method: "POST",
+        method: "PATCH",
         body: JSON.stringify({
-          chatId: chatId,
-          currentUserId: session?.user.id,
-          text,
-          replyText,
+          editText: text,
+          messageId,
+          chatId,
         }),
       });
-
       if (response.ok) {
         setText("");
-        setReplyText("");
+        setEditText("");
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      try {
+        const response = await fetch("/api/messages", {
+          method: "POST",
+          body: JSON.stringify({
+            chatId: chatId,
+            currentUserId: session?.user.id,
+            text,
+            replyText,
+          }),
+        });
+
+        if (response.ok) {
+          setText("");
+          setReplyText("");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -106,11 +131,28 @@ const ChatDetail = () => {
       });
     };
 
+    const handleGetChat = async () => {
+      try {
+        const response = await fetch(`/api/messages/${chatId}`, {
+          method: "GET",
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setChat(data);
+        }
+      } catch (error) {
+        alert(error);
+      }
+    };
+
     pusherClient.bind("new-message", handleMessage);
+    pusherClient.bind("delete-message", handleGetChat);
 
     return () => {
       pusherClient.unsubscribe(chatId);
       pusherClient.unbind("new-message", handleMessage);
+      pusherClient.unbind("delete-message", handleGetChat);
     };
   }, [chatId]);
 
@@ -121,6 +163,12 @@ const ChatDetail = () => {
       behavior: "instant",
     });
   }, [chat?.messages, replyText]);
+
+  const [isToggle, setToggle] = useState(false);
+  const [togglePosition, setTogglePosition] = useState([0, 0]);
+
+  const [messageId, setMessageId] = useState("");
+  const [toggleUser, setToggleUser] = useState(false);
 
   const renderMessages = (messages, setReplyTextId, setReplyText) => {
     let prevSender = null;
@@ -150,6 +198,12 @@ const ChatDetail = () => {
           hideAvatar={hideAvatar}
           setReplyTextId={setReplyTextId}
           setReplyText={setReplyText}
+          setToggle={setToggle}
+          isToggle={isToggle}
+          setTogglePosition={setTogglePosition}
+          setContextReply={setContextReply}
+          setMessageId={setMessageId}
+          setToggleUser={setToggleUser}
         />
       );
     });
@@ -176,17 +230,48 @@ const ChatDetail = () => {
     setReplyText("");
   };
 
+  const handleCancelEdit = () => {
+    setEditText("");
+    setText("");
+  };
+
+  const handleDeleteText = async () => {
+    try {
+      const response = await fetch(`/api/messages`, {
+        method: "DELETE",
+        body: JSON.stringify({
+          messageId,
+          chatId,
+        }),
+      });
+      if (response.ok) setToggle(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleBack = () => {
+    router.back();
+  };
+
+  const handleToProfile = () => {
+    if (session?.user.id === groupUserId) router.push("/profile");
+    else router.push(`/other-profile?id=${groupUserId}`);
+  };
+
   return (
     <section className="app-chat">
       <div className="innerApp-chat">
-        <div
+        <motion.div
+          onClick={handleBack}
           className="relative w-5 h-5 mb-2 cursor-pointer"
-          onClick={() => {
-            router.back();
+          whileTap={{ x: 10 }}
+          transition={{
+            duration: 0.25,
           }}
         >
           <Image src="/assets/icons/Back icon.png" fill />
-        </div>
+        </motion.div>
         <div className="flex w-full h-[calc(100%-3rem)] gap-2">
           <div className="hidden md:block w-[calc(29rem)]">
             <ChatList />
@@ -200,10 +285,18 @@ const ChatDetail = () => {
             ) : (
               <div className="h-full">
                 <div className="w-full border flex items-center gap-2 py-2 px-3 rounded-t-md">
-                  <div className="relative w-8 h-8">
+                  <div
+                    className="relative w-8 h-8 cursor-pointer"
+                    onClick={handleToProfile}
+                  >
                     <Image src={groupPhoto} fill className="rounded-full" />
                   </div>
-                  <p className="text-sm">{groupName}</p>
+                  <p
+                    className="text-sm cursor-pointer"
+                    onClick={handleToProfile}
+                  >
+                    {groupName}
+                  </p>
                 </div>
                 <div
                   className={`px-3 ${
@@ -238,7 +331,17 @@ const ChatDetail = () => {
                 >
                   {replyText !== "" && (
                     <div className="w-[calc(100%-1rem)] mb-1 bg-slate-100 border-l-8 px-2 py-2 rounded-md flex justify-between">
-                      <p className="text-sm">{replyText}</p>
+                      <p
+                        className="text-sm truncate overflow-hidden whitespace-nowrap"
+                        // style={{
+                        //   display: "-webkit-box",
+                        //   WebkitBoxOrient: "vertical",
+                        //   WebkitLineClamp: 1,
+                        // }}
+                      >
+                        {replyText}
+                      </p>
+
                       <div
                         className="relative h-5 w-5 cursor-pointer"
                         onClick={handleCancelReply}
@@ -247,9 +350,30 @@ const ChatDetail = () => {
                       </div>
                     </div>
                   )}
+                  {editText !== "" && (
+                    <div className="w-[calc(100%-1rem)] mb-1 bg-slate-100 border-l-8 px-2 py-2 rounded-md flex justify-between">
+                      <p
+                        className="text-sm truncate overflow-hidden whitespace-nowrap"
+                        // style={{
+                        //   display: "-webkit-box",
+                        //   WebkitBoxOrient: "vertical",
+                        //   WebkitLineClamp: 1,
+                        // }}
+                      >
+                        {editText}
+                      </p>
+
+                      <div
+                        className="relative h-5 w-5 cursor-pointer"
+                        onClick={handleCancelEdit}
+                      >
+                        <Image src="/assets/icons/Cross icon.png" fill />
+                      </div>
+                    </div>
+                  )}
                   <div className="flex items-center gap-4 w-[calc(100%-1rem)] bg-slate-100 rounded-lg shadow-md px-4 py-2">
                     <TextareaAutosize
-                      className="resize-none w-full bg-transparent text-sm py-1 focus:outline-none max-h-16"
+                      className="resize-none w-full bg-transparent text-sm py-1 focus:outline-none max-h-16 transition-all"
                       placeholder="Send message..."
                       value={text}
                       onChange={(e) => setText(e.target.value)}
@@ -260,10 +384,10 @@ const ChatDetail = () => {
                         <Image src="/assets/icons/Photo search.png" fill />
                       </div>
                       <button
-                        className="text-sm bg-blue-500 text-white px-4 py-1 rounded-full"
+                        className="text-sm bg-blue-500 text-white px-4 py-1 rounded-full transition-all"
                         onClick={sendText}
                       >
-                        Send
+                        {editText ? "Done" : "Send"}
                       </button>
                     </div>
                   </div>
@@ -273,6 +397,18 @@ const ChatDetail = () => {
           </div>
         </div>
       </div>
+      <ContextBox
+        isToggle={isToggle}
+        setToggle={setToggle}
+        togglePosition={togglePosition}
+        contextReply={contextReply}
+        setReplyText={setReplyText}
+        setMessageId={setMessageId}
+        handleDeleteText={handleDeleteText}
+        toggleUser={toggleUser}
+        setText={setText}
+        setEditText={setEditText}
+      />
     </section>
   );
 };
