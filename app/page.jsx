@@ -27,9 +27,12 @@ const PostCardList = ({ data, handleTagClick }) => {
 const Home = () => {
   const [post, setPost] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
+    console.log("hi");
     const fetchPosts = async () => {
+      setLoading(true);
       const response = await fetch("/api/post");
       if (response.ok) {
         const data = await response.json();
@@ -41,11 +44,18 @@ const Home = () => {
     };
 
     fetchPosts();
-  }, []);
+  }, [refresh]);
 
   return (
     <section className="app">
       <section className="innerApp">
+        <button
+          onClick={() => {
+            setRefresh(!refresh);
+          }}
+        >
+          refresh
+        </button>
         {loading ? (
           <div className="flex flex-col gap-4">
             <LoadingPostBox />
