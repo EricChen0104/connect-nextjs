@@ -33,7 +33,7 @@ const Home = () => {
     console.log("hi");
     const fetchPosts = async () => {
       setLoading(true);
-      const response = await fetch("/api/post");
+      const response = await fetch("/api/post", { method: "GET" });
       if (response.ok) {
         const data = await response.json();
 
@@ -68,7 +68,19 @@ const Home = () => {
             <LoadingPostBox />
           </div>
         ) : (
-          <PostCardList data={post} handleTagClick={() => {}} />
+          <div className="flex flex-col gap-5">
+            {post
+              .slice()
+              .reverse()
+              .map((post) => (
+                <PostCard
+                  key={[post._id]}
+                  post={post}
+                  handleTagClick={() => {}}
+                  postLen={10}
+                />
+              ))}
+          </div>
         )}
       </section>
     </section>
