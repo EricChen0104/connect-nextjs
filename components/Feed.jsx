@@ -31,10 +31,13 @@ const Feed = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       const response = await fetch("/api/post");
-      const data = await response.json();
+      if (response.ok) {
+        const data = await response.json();
 
-      setPost(data);
-      setLoading(false);
+        setPost(data);
+        console.log(data);
+        setLoading(false);
+      }
     };
 
     fetchPosts();

@@ -63,7 +63,7 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }) => {
         >
           <p>Upload new photo</p>
         </CldUploadButton> */}
-        <label className="flex flex-col gap-4 px-2 border-b">
+        <label className="flex flex-col gap-4 border-b">
           <span className="font-semibold pt-4">
             Tags {` `}
             <span className="font-light">(#lifestyle, #sports, #foods)</span>
@@ -73,7 +73,7 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }) => {
             onChange={(e) => setPost({ ...post, tag: e.target.value })}
             placeholder="#tag"
             required
-            className="form_input mb-4 p-2"
+            className="form_input mb-4 p-2 "
           />
         </label>
       </form>
