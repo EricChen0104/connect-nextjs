@@ -25,7 +25,7 @@ const PostCardList = ({ data, handleTagClick }) => {
   );
 };
 const Home = () => {
-  const [post, setPost] = useState([]);
+  const [posts, setPost] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
 
@@ -33,13 +33,17 @@ const Home = () => {
     console.log("hi");
     const fetchPosts = async () => {
       setLoading(true);
-      const response = await fetch("/api/post", { method: "GET" });
-      if (response.ok) {
-        const data = await response.json();
+      try {
+        const response = await fetch("/api/post", { method: "GET" });
+        if (response.ok) {
+          const data = await response.json();
 
-        setPost(data);
-        console.log(data);
-        setLoading(false);
+          setPost(data);
+          console.log(data);
+          setLoading(false);
+        }
+      } catch (error) {
+        alert(error);
       }
     };
 
@@ -69,7 +73,7 @@ const Home = () => {
           </div>
         ) : (
           <div className="flex flex-col gap-5">
-            {post
+            {posts
               .slice()
               .reverse()
               .map((post) => (
