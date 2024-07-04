@@ -44,21 +44,23 @@ const Feed = () => {
   }, []);
 
   return (
-    <section className="innerApp">
-      {loading ? (
-        <div className="flex flex-col gap-4">
-          <LoadingPostBox />
-          <LoadingPostBox />
-          <LoadingPostBox />
-          <LoadingPostBox />
-          <LoadingPostBox />
-          <LoadingPostBox />
-          <LoadingPostBox />
-          <LoadingPostBox />
-        </div>
-      ) : (
-        <PostCardList data={post} handleTagClick={() => {}} />
-      )}
+    <section className="app">
+      <section className="innerApp">
+        {loading ? (
+          <div className="flex flex-col gap-4">
+            <LoadingPostBox />
+            <LoadingPostBox />
+            <LoadingPostBox />
+            <LoadingPostBox />
+            <LoadingPostBox />
+            <LoadingPostBox />
+            <LoadingPostBox />
+            <LoadingPostBox />
+          </div>
+        ) : (
+          <PostCardList data={post} handleTagClick={() => {}} />
+        )}
+      </section>
     </section>
   );
 };

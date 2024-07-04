@@ -1,100 +1,106 @@
-"use client";
+// "use client";
 
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react";
 
-import PostCard from "@components/PostCard";
+// import PostCard from "@components/PostCard";
 
-import LoadingPostBox from "@components/LoadingPostBox";
+// import LoadingPostBox from "@components/LoadingPostBox";
 import Feed from "@components/Feed";
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
 
-const PostCardList = ({ data, handleTagClick }) => {
-  return (
-    <div className="flex flex-col gap-5">
-      {data
-        .slice()
-        .reverse()
-        .map((post) => (
-          <PostCard
-            key={[post._id]}
-            post={post}
-            handleTagClick={handleTagClick}
-            postLen={10}
-          />
-        ))}
-    </div>
-  );
-};
+const FeedClient = dynamic(() => import("@components/Feed"), {
+  ssr: false,
+});
+// const PostCardList = ({ data, handleTagClick }) => {
+//   return (
+//     <div className="flex flex-col gap-5">
+//       {data
+//         .slice()
+//         .reverse()
+//         .map((post) => (
+//           <PostCard
+//             key={[post._id]}
+//             post={post}
+//             handleTagClick={handleTagClick}
+//             postLen={10}
+//           />
+//         ))}
+//     </div>
+//   );
+// };
 const Home = () => {
-  const [posts, setPost] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [refresh, setRefresh] = useState(false);
+  // const [posts, setPost] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [refresh, setRefresh] = useState(false);
+  // const [loadComment, setLoadComment] = useState(false);
 
-  useEffect(() => {
-    console.log("hi");
-    const fetchPosts = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch("/api/post", { method: "GET" });
-        if (response.ok) {
-          const data = await response.json();
+  // useEffect(() => {
+  //   console.log("hi");
+  //   const fetchPosts = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await fetch("/api/post", { method: "GET" });
+  //       if (response.ok) {
+  //         const data = await response.json();
 
-          setPost(data);
-          console.log(data);
-          setLoading(false);
-        }
-      } catch (error) {
-        alert(error);
-      }
-    };
+  //         setPost(data);
+  //         console.log(data);
+  //         setLoading(false);
+  //       }
+  //     } catch (error) {
+  //       alert(error);
+  //     }
+  //   };
 
-    fetchPosts();
-  }, [refresh]);
+  //   fetchPosts();
+  // }, [refresh]);
 
-  return (
-    <section className="app">
-      <section className="innerApp">
-        <button
-          onClick={() => {
-            setRefresh(!refresh);
-          }}
-        >
-          refresh
-        </button>
-        {loading ? (
-          <div className="flex flex-col gap-4">
-            <LoadingPostBox />
-            <LoadingPostBox />
-            <LoadingPostBox />
-            <LoadingPostBox />
-            <LoadingPostBox />
-            <LoadingPostBox />
-            <LoadingPostBox />
-            <LoadingPostBox />
-          </div>
-        ) : (
-          <div className="flex flex-col gap-5">
-            {posts
-              .slice()
-              .reverse()
-              .map((post) => (
-                <PostCard
-                  key={[post._id]}
-                  post={post}
-                  handleTagClick={() => {}}
-                  postLen={10}
-                />
-              ))}
-          </div>
-        )}
-      </section>
-    </section>
-  );
   // return (
   //   <section className="app">
-  //     {/* <Feed /> */}
-
+  //     <section className="innerApp">
+  //       <button
+  //         onClick={() => {
+  //           setRefresh(!refresh);
+  //         }}
+  //       >
+  //         refresh
+  //       </button>
+  //       {loading ? (
+  //         <div className="flex flex-col gap-4">
+  //           <LoadingPostBox />
+  //           <LoadingPostBox />
+  //           <LoadingPostBox />
+  //           <LoadingPostBox />
+  //           <LoadingPostBox />
+  //           <LoadingPostBox />
+  //           <LoadingPostBox />
+  //           <LoadingPostBox />
+  //         </div>
+  //       ) : (
+  //         <div className="flex flex-col gap-5">
+  //           {posts
+  //             .slice()
+  //             .reverse()
+  //             .map((post) => (
+  //               <PostCard
+  //                 key={[post._id]}
+  //                 post={post}
+  //                 handleTagClick={() => {}}
+  //                 postLen={10}
+  //                 loadComment={loadComment}
+  //               />
+  //             ))}
+  //         </div>
+  //       )}
+  //     </section>
   //   </section>
   // );
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <FeedClient />
+    </Suspense>
+  );
 };
 
 export default Home;
