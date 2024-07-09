@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 
-import PostCard from "./PostCard";
+import PostCard from "@components/PostCard";
 
-import LoadingPostBox from "./LoadingPostBox";
+import LoadingPostBox from "@components/LoadingPostBox";
 
 const PostCardList = ({ data, handleTagClick }) => {
   return (

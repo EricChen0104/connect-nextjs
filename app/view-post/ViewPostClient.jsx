@@ -101,6 +101,7 @@ const viewPost = () => {
             post={post}
             handleTagClick={() => {}}
             loadComment={loadComment}
+            isloadComment={true}
           />
         )}
         <hr className="mt-8" />
