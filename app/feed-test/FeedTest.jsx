@@ -25,17 +25,17 @@ const PostCardList = ({ data, handleTagClick }) => {
 };
 
 const Feed = () => {
-  const [post, setPost] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   // const [isloadComment, setIsLoadComment] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch("/api/post");
+      const response = await fetch("/api/post/getAllPost");
       if (response.ok) {
         const data = await response.json();
 
-        setPost(data);
+        setPosts(data);
         console.log(data);
         setLoading(false);
       }
@@ -59,7 +59,7 @@ const Feed = () => {
             <LoadingPostBox />
           </div>
         ) : (
-          <PostCardList data={post} handleTagClick={() => {}} />
+          <PostCardList data={posts} handleTagClick={() => {}} />
         )}
       </section>
     </section>
