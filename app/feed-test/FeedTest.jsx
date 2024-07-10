@@ -6,6 +6,9 @@ import PostCard from "@components/PostCard";
 
 import LoadingPostBox from "@components/LoadingPostBox";
 
+import { useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+
 const PostCardList = ({ data, handleTagClick }) => {
   return (
     <div className="flex flex-col gap-5">
@@ -25,13 +28,16 @@ const PostCardList = ({ data, handleTagClick }) => {
 };
 
 const Feed = () => {
+  const { data: session } = useSession();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   // const [isloadComment, setIsLoadComment] = useState(false);
+  const searchParams = useSearchParams();
+  const userId = searchParams.get("id");
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch("/api/post/getAllPost");
+      const response = await fetch("/api/post");
       if (response.ok) {
         const data = await response.json();
 
