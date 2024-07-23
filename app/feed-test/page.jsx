@@ -6,11 +6,7 @@ const FeedTestClient = dynamic(() => import("./FeedTest"), {
 });
 
 const FeedTest = () => {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <FeedTestClient />
-    </Suspense>
-  );
+  return <FeedTestClient />;
 };
 
 export default FeedTest;

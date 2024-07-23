@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, startTransition } from "react";
 
 import PostCard from "@components/PostCard";
 
@@ -37,11 +37,14 @@ const Feed = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
+      setLoading(true);
       const response = await fetch("/api/post");
       if (response.ok) {
         const data = await response.json();
+        startTransition(() => {
+          setPosts(data);
+        });
 
-        setPosts(data);
         console.log(data);
         setLoading(false);
       }
